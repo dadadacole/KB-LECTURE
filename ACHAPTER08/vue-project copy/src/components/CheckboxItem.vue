@@ -1,0 +1,12 @@
+<template>
+    <!-- idol을 객체로 받아왔으므로 idol 안쪽의 속성에 .으로 접근 -->
+    <li><input type="checkbox" :checked="idol.checked" />{{ idol.name }}</li>
+</template>
+
+<script>
+export default {
+    name: 'CheckboxItem',
+    //받아올 속성이 많은 경우 객체를 통째로 넘겨준다
+    props: ['idol'], //속성명을 배열로 정의
+};
+</script>

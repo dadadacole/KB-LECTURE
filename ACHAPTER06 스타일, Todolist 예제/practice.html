@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vue.js를 이용한 동적 드롭다운</title>
+        <!-- Vue.js CDN 추가 -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <select name="step1" v-model="selectedStep1" v-on:change="fetchStep2Options">
+                <option value=""></option>
+                <option v-for="breed in breeds" :value="breed.id"></option>
+            </select>
+
+            <select name="step2" v-model="selectedStep2" v-on:change="fetchStep3Options" v-show="true">
+                <option value=""></option>
+                <option v-for="subBreed in subBreeds" :value="subBreed"></option>
+            </select>
+
+            <br /><br /><br />
+            <!-- 이미지를 보여주는 부분 -->
+            <img v-if="selectedStep3" :src="selectedStep3" alt="선택된 이미지" />
+        </div>
+
+        <script>
+            new Vue({
+                el: '#app',
+                data: {
+                    selectedStep1: '',
+                    selectedStep2: '',
+                    selectedStep3: '',
+                    breeds: [],
+                    subBreeds: [],
+                    images: [],
+                },
+                methods: {
+                    async fetchStep1Options() {
+                        const response = await fetch('https://dog.ceo/api/breeds/list/all');
+                        const data = await response.json();
+                        this.breeds = Object.keys(data.message).map((breed) => ({
+                            id: breed,
+                            name: breed,
+                        }));
+                        if (this.selectedStep1) {
+                            this.fetchStep2Options();
+                        }
+                    },
+                    async fetchStep2Options() {
+                        this.images = []; // 이미지 초기화
+                        if (this.selectedStep1) {
+                            const response = await fetch(`https://dog.ceo/api/breed/${this.selectedStep1}/list`);
+                            const data = await response.json();
+                            this.subBreeds = data.message;
+                            if (!this.subBreeds.includes(this.selectedStep2)) {
+                                this.selectedStep2 = '';
+                                this.selectedStep3 = '';
+                            } else {
+                                this.fetchStep3Options();
+                            }
+                        } else {
+                            this.selectedStep2 = '';
+                            this.selectedStep3 = '';
+                        }
+                    },
+                    async fetchStep3Options() {
+                        this.images = [];
+                        if (this.selectedStep2) {
+                            const response = await fetch(`https://dog.ceo/api/breed/${this.selectedStep1}/${this.selectedStep2}/images/random/10`);
+                            const data = await response.json();
+                            this.images = data.message;
+                            if (!this.images.includes(this.selectedStep3)) {
+                                this.selectedStep3 = '';
+                            }
+                        } else {
+                            this.selectedStep3 = '';
+                        }
+                    },
+                },
+                async mounted() {
+                    this.selectedStep1 = 'pointer';
+                    this.selectedStep2 = 'germanlonghair';
+                    this.selectedStep3 = 'https://images.dog.ceo/breeds/pointer-german/n021002
+            });
+        </script>
+    </body>
+</html>

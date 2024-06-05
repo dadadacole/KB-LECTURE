@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="app">
+            <select id="regions">
+                <option disabled="disabled" selected>지역 선택</option>
+                <option v-for="(val,key) in regions" :value="key" :key="key">{{val}}</option>
+            </select>
+        </div>
+        <script src="https://unpkg.com/vue"></script>
+        <script>
+            let vm = Vue.createApp({
+                name: 'App',
+                data() {
+                    return {
+                        regions: {
+                            A: 'ASIA',
+                            B: 'AMERCIA',
+                            C: 'EUROPE',
+                            D: 'AFRICA',
+                            E: 'OCEANIA',
+                        },
+                    };
+                },
+            }).mount('#app');
+        </script>
+    </body>
+</html>

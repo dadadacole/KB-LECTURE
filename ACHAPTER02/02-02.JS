@@ -1,0 +1,17 @@
+let msg = 'GLOBAL';
+function outer() {
+    // 스코프 내에서 가장 가까이 있는 변수 값을 먼저 찾는다
+    // 같은 스코프 내에 변수가 있으면 더 넓은 스코프로 이동
+    let msg = 'OUTER';
+    console.log(msg);
+    if (true) {
+        let msg = 'BLOCK';
+        console.log(msg); //block
+    }
+}
+
+outer();
+
+// node 02-02.js
+
+// 필드는 수정 가능하다,
